@@ -8,6 +8,12 @@ const exists = promisify(fsExists)
 const readFile = promisify(fsReadFile)
 
 describe('mapfs', () => {
+  it('empty should work', async () => {
+    const tmp = join(__dirname, 'tmp')
+    const cleanup = await mapfs(tmp, {})
+    await cleanup()
+  })
+
   it('should create files', async () => {
     const tmp = join(__dirname, 'tmp')
     const cleanup = await mapfs(tmp, {

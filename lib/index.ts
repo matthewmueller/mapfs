@@ -41,7 +41,7 @@ async function mapfs(root: string, map: { [path: string]: string }): Promise<() 
   return async function() {
     await Promise.all(filepaths.map(file => del(file)))
     // if we have an empty root directory, also delete it
-    if ((await readdir(root)).length === 0) {
+    if (filepaths.length && (await readdir(root)).length === 0) {
       await del(root)
     }
   }
