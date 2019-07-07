@@ -23,20 +23,14 @@ const readdir = promisify(fsReaddir)
 export = mapfs
 
 /**
- * Filemap type `{ path: contents }`
- */
-
-type Filemap = { [path: string]: string }
-
-/**
  * mapfs function creates a `filemap` at `root`
  * returning a delete function
  */
 
-async function mapfs(root: string, filemap: Filemap): Promise<() => Promise<void>> {
+async function mapfs(root: string, map: { [path: string]: string }): Promise<() => Promise<void>> {
   const filepaths: string[] = []
-  for (let name in filemap) {
-    const data = stripIndent((filemap[name] || '').trim())
+  for (let name in map) {
+    const data = stripIndent((map[name] || '').trim())
     // TODO: also support windows
     const parts = name.split('/')
     const filepath = join(root, ...parts)
