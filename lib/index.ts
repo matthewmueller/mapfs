@@ -38,10 +38,14 @@ async function mapfs(root: string, map: { [path: string]: string }): Promise<() 
     await mkdir(dirname(filepath))
     await writeFile(filepath, data)
   }
+  // create the root anyway if don't have any files
+  if (filepaths.length === 0) {
+    await mkdir(root)
+  }
   return async function() {
     await Promise.all(filepaths.map(file => del(file)))
     // if we have an empty root directory, also delete it
-    if (filepaths.length && (await readdir(root)).length === 0) {
+    if ((await readdir(root)).length === 0) {
       await del(root)
     }
   }
