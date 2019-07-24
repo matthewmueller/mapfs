@@ -1,3 +1,11 @@
+# Automatically install `github.com/matthewmueller/make` if we haven't already
+includes := $(wildcard ${.INCLUDE_DIRS}/github.com/matthewmueller/make/all.mk)
+ifeq ($(strip ${includes}),)
+	installer := $(shell >&2 echo "Installing 'github.com/matthewmueller/make'..." && \
+		curl -sL https://raw.githubusercontent.com/matthewmueller/make/master/install.sh | sh)
+endif
+include github.com/matthewmueller/make/all.mk
+
 precommit: test
 
 clean:
