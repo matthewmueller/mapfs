@@ -1,16 +1,27 @@
 precommit: test
 
-compile: clean
+clean:
+	@ rm -rf node_modules
+
+install:
+	@ npm install
+
+check:
 	@ ./node_modules/.bin/tsc
 
-compile.watch: clean
+check.watch:
 	@ ./node_modules/.bin/tsc -w
 
-test: clean
-	@ ./node_modules/.bin/mocha --require ts-mocha lib/index_test.ts
+test: clean install check
+	@ ./node_modules/.bin/taz
 
-test.watch: clean
-	@ ./node_modules/.bin/mocha --require ts-mocha -w lib/index_test.ts
+publish: bin.npm bin.node bin.jq env.NPM_TOKEN test
+	@ echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+	@ jq --arg version "$(shell npm show taz version)" '. + {version: $$version}' < package.json > package.tmp.json
+	@ mv package.tmp.json package.json
+	@ npm version minor --force --no-commit-hooks --no-git-tag-version
+	@ npm publish
 
-clean:
-	@ rm -rf dist/
+# Run through CI
+ci.test: test
+ci.deploy: publish
