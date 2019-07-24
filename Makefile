@@ -25,7 +25,7 @@ test: clean install check
 
 publish: bin.npm bin.node bin.jq env.NPM_TOKEN test
 	@ echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-	@ jq --arg version "$(shell npm show taz version)" '. + {version: $$version}' < package.json > package.tmp.json
+	@ jq --arg version "$(shell npm show $(shell jq '.name' < package.json) version)" '. + {version: $$version}' < package.json > package.tmp.json
 	@ mv package.tmp.json package.json
 	@ npm version minor --force --no-commit-hooks --no-git-tag-version
 	@ npm publish
