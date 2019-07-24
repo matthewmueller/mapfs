@@ -3,8 +3,6 @@
     "lib": ["es2018"],
     "allowJs": true,
     "checkJs": true,
-    // "declaration": true,
-    // "emitDeclarationOnly": true,
     "noEmit": true,
     "strict": true,
     "esModuleInterop": true,
@@ -13,5 +11,5 @@
       "*": ["./types/*"]
     }
   },
-  "include": ["*.js", "lib/index_test.js"]
+  "include": ["lib/**/*"]
 }
