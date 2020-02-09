@@ -16,15 +16,9 @@ import mapfs from 'mapfs'
 
 const tmp = join(__dirname, 'tmp')
 const cleanup = await mapfs(tmp, {
-  'test/test.js': `
-    console.log('test')
-  `
-  'a.js': `
-    console.log('a')
-  `
-  'b/b.js': `
-    console.log('a')
-  `
+  'test/test.js': `console.log('test')`
+  'a.js': `console.log('a')`
+  'b/b.js': `console.log('a')`
 })
 
 // ...run some tests...
