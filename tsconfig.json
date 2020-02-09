@@ -1,15 +1,25 @@
 {
   "compilerOptions": {
-    "lib": ["es2018"],
-    "allowJs": true,
-    "checkJs": true,
-    "noEmit": true,
+    "target": "es2018",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "rootDir": "src/",
+    "outDir": "dist/",
     "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmitOnError": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "*": ["./types/*"]
-    }
+    },
+    "noErrorTruncation": true
   },
-  "include": ["lib/**/*"]
+  "exclude": ["node_modules/**", "dist/**"],
+  "include": ["src/**/*"]
 }

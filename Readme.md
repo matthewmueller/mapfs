@@ -4,8 +4,8 @@ A little utility function for easily creating files to help with testing.
 
 ## Install
 
-```sh
-yarn add mapfs
+```bash
+npm install mapfs
 ```
 
 ## Example

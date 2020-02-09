@@ -1,39 +1,34 @@
-# Automatically install & include https://github.com/matthewmueller/make
-ifeq ($(strip $(wildcard ${.INCLUDE_DIRS}/github.com/matthewmueller/make/all.mk)),)
-	i := $(shell >&2 echo "installing github.com/matthewmueller/make..." && curl -sL https://git.io/fjD5i | sh)
-endif
-include github.com/matthewmueller/make/all.mk
-
 GREP ?= ""
 
-precommit: install test
+# Precommit hook
+precommit: clean install check build test
 
 clean:
 	@ rm -rf node_modules
+install: yarn.install
+check: yarn.check
+build: tsc.build
+test: mocha.test
 
-install: clean bin.yarn
+yarn.check: bin.yarn
+	@ yarn check --integrity --verify-tree
+
+yarn.install: bin.yarn
 	@ yarn install
 
-check: bin.yarn
-	@ yarn check --integrity --verify-tree
+tsc.build:
 	@ ./node_modules/.bin/tsc
 
-check.watch:
+tsc.watch:
 	@ ./node_modules/.bin/tsc -w
 
-test: clean install check
-	@ ./node_modules/.bin/taz -b -g "$(GREP)" --timeout 60s
+mocha.test:
+	@ ./node_modules/.bin/mocha -b -g "$(GREP)" dist/*_test.js
 
-test.only:
-	@ ./node_modules/.bin/taz -b -g "$(GREP)" --timeout 60s
-
-publish: bin.yarn bin.node bin.jq env.NPM_TOKEN test
-	@ echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-	@ if [ "$(shell yarn info -s $(shell jq '.name' < package.json) version)" != "$(shell jq .version < package.json)" ]; then \
-			yarn publish; \
-		fi
-	@ rm .npmrc
-
-# Run through CI
-ci.test: test
-ci.deploy: publish
+# Ensure we have the provided command binary in our $PATH
+bin.%:
+	@ if [ "$$(command -v ${*})" = "" ]; then \
+		echo "Required binary \`${*}\` is not found in your \$$PATH."; \
+		exit 1; \
+	fi
+.PHONY: bin bin. bin.%%
